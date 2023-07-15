@@ -57,7 +57,6 @@ std::shared_ptr<MalType> quasiquote(std::shared_ptr<MalType> ast, bool handle_ve
             new_list->push_back(quasiquote(list.to_list(), false));
             return new_list;
         }
-        [[fallthrough]];
     }
     case MalType::Type::Symbol:
     {
