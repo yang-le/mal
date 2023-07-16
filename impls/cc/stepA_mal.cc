@@ -2,6 +2,7 @@
 #include "env.hh"
 #include "printer.hh"
 #include "reader.hh"
+#include "readline.hh"
 #include <iostream>
 #include <map>
 #include <string>
@@ -385,11 +386,10 @@ int main(int argc, char *argv[])
 
     rep("(println (str \"Mal [\" *host-language* \"]\"))", repl_env);
 
-    while (!std::cin.eof())
+    initialize_readline(repl_env.get());
+
+    while (auto input = rl_gets("user> "))
     {
-        std::string input;
-        std::cout << "user> ";
-        std::getline(std::cin, input);
         try
         {
             auto rep_result = rep(input, repl_env);

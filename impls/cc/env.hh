@@ -49,6 +49,11 @@ public:
 
     bool is_root() const { return !outer_; }
 
+    std::map<std::string, std::shared_ptr<MalType>>::iterator begin() noexcept { return data_.begin(); }
+    std::map<std::string, std::shared_ptr<MalType>>::const_iterator begin() const noexcept { return data_.begin(); }
+    std::map<std::string, std::shared_ptr<MalType>>::iterator end() noexcept { return data_.end(); }
+    std::map<std::string, std::shared_ptr<MalType>>::const_iterator end() const noexcept { return data_.end(); }
+
 private:
     std::shared_ptr<Env> outer_;
     std::map<std::string, std::shared_ptr<MalType>> data_;

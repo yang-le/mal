@@ -1,6 +1,7 @@
 #include "core.hh"
 #include "printer.hh"
 #include "reader.hh"
+#include "readline.hh"
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -485,15 +486,8 @@ std::shared_ptr<MalType> vals(std::vector<std::shared_ptr<MalType>> args)
 std::shared_ptr<MalType> readline(std::vector<std::shared_ptr<MalType>> args)
 {
     std::string prompt = static_cast<MalSymbol &>(*args[0]);
-    std::cout << prompt;
-
-    if (std::cin.eof())
-        return std::make_shared<MalSymbol>(nil_);
-
-    std::string input;
-    std::getline(std::cin, input);
-
-    return std::make_shared<MalSymbol>('"' + input + '"');
+    auto input = rl_gets(prompt.c_str());
+    return input ? std::make_shared<MalSymbol>('"' + std::string(input) + '"') : std::make_shared<MalSymbol>(nil_);
 }
 
 std::shared_ptr<MalType> time_ms(std::vector<std::shared_ptr<MalType>> args)
