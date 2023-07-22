@@ -22,6 +22,17 @@ static char *mal_command_generator(const char *text, int state)
         len = strlen(text);
 
         commands.clear();
+        commands.push_back("def!");
+        commands.push_back("defmacro!");
+        commands.push_back("let*");
+        commands.push_back("do");
+        commands.push_back("if");
+        commands.push_back("fn*");
+        commands.push_back("quote");
+        commands.push_back("quasiquoteexpand");
+        commands.push_back("quasiquote");
+        commands.push_back("macroexpand");
+        commands.push_back("try*");
         for (auto &[key, _] : *env_)
             commands.emplace_back(key);
     }
