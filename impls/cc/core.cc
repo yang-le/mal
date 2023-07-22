@@ -20,7 +20,14 @@ std::shared_ptr<MalType> add(std::vector<std::shared_ptr<MalType>> args)
 
 std::shared_ptr<MalType> sub(std::vector<std::shared_ptr<MalType>> args)
 {
-    int result = static_cast<MalInt &>(*args[0]) - static_cast<MalInt &>(*args[1]);
+    if (args.size() == 0)
+        return std::make_shared<MalInt>(0);
+
+    if (args.size() == 1)
+        return std::make_shared<MalInt>(-static_cast<MalInt &>(*args[0]));
+
+    int result = std::accumulate(args.begin() + 1, args.end(), static_cast<MalInt &>(**args.begin()), [](int acc, std::shared_ptr<MalType> i)
+                                 { return acc - static_cast<MalInt &>(*i); });
     return std::make_shared<MalInt>(result);
 }
 
@@ -33,7 +40,14 @@ std::shared_ptr<MalType> mul(std::vector<std::shared_ptr<MalType>> args)
 
 std::shared_ptr<MalType> divide(std::vector<std::shared_ptr<MalType>> args)
 {
-    int result = static_cast<MalInt &>(*args[0]) / static_cast<MalInt &>(*args[1]);
+    if (args.size() == 0)
+        return std::make_shared<MalInt>(1);
+
+    if (args.size() == 1)
+        return std::make_shared<MalInt>(1 / static_cast<MalInt &>(*args[0]));
+
+    int result = std::accumulate(args.begin() + 1, args.end(), static_cast<MalInt &>(**args.begin()), [](int acc, std::shared_ptr<MalType> i)
+                                 { return acc / static_cast<MalInt &>(*i); });
     return std::make_shared<MalInt>(result);
 }
 
