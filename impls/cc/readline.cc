@@ -33,6 +33,9 @@ static char *mal_command_generator(const char *text, int state)
         commands.push_back("quasiquote");
         commands.push_back("macroexpand");
         commands.push_back("try*");
+        commands.push_back("catch*");
+        commands.push_back("unquote");
+        commands.push_back("splice-unquote");
         for (auto &[key, _] : *env_)
             commands.emplace_back(key);
     }

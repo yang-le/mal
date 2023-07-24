@@ -15,7 +15,6 @@ cd impls/tests
 
 tests=`ls lib`
 tests=${tests[*]/memoize.mal}
-tests=${tests[*]/protocols.mal}
 
 for t in $tests; do
     python ../../runtest.py lib/$t ../cc/run
