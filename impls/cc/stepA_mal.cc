@@ -96,24 +96,25 @@ bool is_macro_call(std::shared_ptr<MalType> ast, std::shared_ptr<Env> env)
     return func.is_macro;
 }
 
+std::shared_ptr<MalType> macroexpand1(std::shared_ptr<MalType> ast, std::shared_ptr<Env> env)
+{
+    auto &list = static_cast<MalList &>(*ast);
+    auto symbol = env->get(static_cast<MalSymbol &>(*list[0]));
+    auto &func = static_cast<MalFunc &>(*symbol);
+
+    std::vector<std::shared_ptr<MalType>> rest;
+    for (unsigned i = 1; i < list.size(); ++i)
+        rest.push_back(list[i]);
+
+    return func(rest);
+}
+
 std::shared_ptr<MalType> macroexpand(std::shared_ptr<MalType> ast, std::shared_ptr<Env> env)
 {
-    auto ast_ = ast;
+    while (is_macro_call(ast, env))
+        ast = macroexpand1(ast, env);
 
-    while (is_macro_call(ast_, env))
-    {
-        auto &list = static_cast<MalList &>(*ast_);
-        auto symbol = env->get(static_cast<MalSymbol &>(*list[0]));
-        auto &func = static_cast<MalFunc &>(*symbol);
-
-        std::vector<std::shared_ptr<MalType>> rest;
-        for (unsigned i = 1; i < list.size(); ++i)
-            rest.push_back(list[i]);
-
-        ast_ = func(rest);
-    }
-
-    return ast_;
+    return ast;
 }
 
 std::shared_ptr<MalType> eval_ast(std::shared_ptr<MalType> ast, std::shared_ptr<Env> env)
@@ -287,6 +288,9 @@ std::shared_ptr<MalType> eval(std::shared_ptr<MalType> input, std::shared_ptr<En
 
             if (symbol == "macroexpand")
                 return macroexpand(list[1], env);
+
+            if (symbol == "macroexpand-1")
+                return macroexpand1(list[1], env);
 
             if (symbol == "try*")
             {
