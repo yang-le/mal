@@ -1,6 +1,7 @@
 #include "readline.hh"
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <set>
 
 static const Env *env_;
 
@@ -9,43 +10,41 @@ static const Env *env_;
    start at the top of the list. */
 static char *mal_command_generator(const char *text, int state)
 {
-    static size_t list_index, len;
-    static std::vector<std::string> commands;
-    const char *name;
+    static size_t len;
+    static std::set<std::string>::iterator it;
+    static std::set<std::string> commands = {
+        "def!",
+        "defmacro!",
+        "let*",
+        "do",
+        "if",
+        "fn*",
+        "quote",
+        "quasiquoteexpand",
+        "quasiquote",
+        "macroexpand",
+        "macroexpand-1",
+        "try*",
+        "catch*",
+        "unquote",
+        "splice-unquote",
+    };
 
     /* If this is a new word to complete, initialize now.  This includes
        saving the length of TEXT for efficiency, and initializing the index
        variable to 0. */
     if (!state)
     {
-        list_index = 0;
+        it = commands.begin();
         len = strlen(text);
-
-        commands.clear();
-        commands.push_back("def!");
-        commands.push_back("defmacro!");
-        commands.push_back("let*");
-        commands.push_back("do");
-        commands.push_back("if");
-        commands.push_back("fn*");
-        commands.push_back("quote");
-        commands.push_back("quasiquoteexpand");
-        commands.push_back("quasiquote");
-        commands.push_back("macroexpand");
-        commands.push_back("macroexpand-1");
-        commands.push_back("try*");
-        commands.push_back("catch*");
-        commands.push_back("unquote");
-        commands.push_back("splice-unquote");
         for (auto &[key, _] : *env_)
-            commands.emplace_back(key);
+            commands.insert(key);
     }
 
     /* Return the next name which partially matches from the command list. */
-    while (list_index < commands.size())
+    while (it != commands.end())
     {
-        name = commands[list_index++].c_str();
-
+        const char *name = it++->c_str();
         if (strncmp(name, text, len) == 0)
             return (strdup(name));
     }
