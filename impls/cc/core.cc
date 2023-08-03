@@ -1,4 +1,5 @@
 #include "core.hh"
+#include "ffi.hh"
 #include "printer.hh"
 #include "reader.hh"
 #include "readline.hh"
@@ -694,5 +695,6 @@ std::map<std::string, std::shared_ptr<MalType>> ns()
         {"number?", std::make_shared<MalFunc>(is_number)},
         {"seq", std::make_shared<MalFunc>(seq)},
         {"conj", std::make_shared<MalFunc>(conj)},
+        {"c-eval", std::make_shared<MalFunc>(c_eval)},
     };
 }

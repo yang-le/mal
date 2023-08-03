@@ -1,9 +1,9 @@
 LD=$(CXX)
 DEBUG=-g
 CXXFLAGS=-O2 -Wall $(DEBUG) $(INCPATHS) -std=c++17 #-fsanitize=address -fsanitize=leak
-LDFLAGS=-O2 $(DEBUG) $(LIBPATHS) -L. -lreadline -lhistory #-fsanitize=address -fsanitize=leak
+LDFLAGS=-O2 $(DEBUG) $(LIBPATHS) -L. -lreadline -lhistory -ldl -lffi #-fsanitize=address -fsanitize=leak
 
-LIBSOURCES=reader.cc printer.cc core.cc readline.cc
+LIBSOURCES=reader.cc printer.cc core.cc readline.cc ffi.cc
 LIBOBJS=$(LIBSOURCES:%.cc=%.o)
 
 MAINS=$(wildcard step*.cc)
